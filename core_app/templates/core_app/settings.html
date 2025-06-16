@@ -1,0 +1,36 @@
+{% extends "core_app/base.html" %}
+{% load static %}
+
+{% block content %}
+<h2>알림 설정</h2>
+
+<form method="post">
+  {% csrf_token %}
+  <table style="border-collapse: collapse;">
+    <tr>
+      <td style="padding: 8px; font-weight: bold;">유통기한 알림 사용 여부:</td>
+      <td style="padding: 8px;">{{ form.push_expiry_alert }}</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; font-weight: bold;">첫 번째 알림 (n일 전):</td>
+      <td style="padding: 8px;">{{ form.alert_day_major }} 일</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; font-weight: bold;">두 번째 알림 (m일 전):</td>
+      <td style="padding: 8px;">{{ form.alert_day_minor }} 일</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; font-weight: bold;">그래프 색상:</td>
+      <td style="padding: 8px;">{{ form.graph_color }}</td>
+    </tr>
+  </table>
+
+  <br />
+  <button type="submit" class="btn btn-primary" style="background-color: #6c3dff; border: none;">
+    💾 저장하기
+  </button>
+</form>
+
+<br />
+<a href="{% url 'dashboard' %}">← 대시보드로 돌아가기</a>
+{% endblock %}

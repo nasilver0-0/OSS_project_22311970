@@ -1,0 +1,66 @@
+{% extends "core_app/base.html" %}
+{% load static %}
+
+{% block content %}
+<h2>집밥 통계</h2>
+
+<form method="get" style="margin-bottom: 20px;">
+  <label for="range">표시 기간:</label>
+  <select name="range" id="range" onchange="this.form.submit()">
+    <option value="daily" {% if range == 'daily' %}selected{% endif %}>일간</option>
+    <option value="weekly" {% if range == 'weekly' %}selected{% endif %}>주간</option>
+    <option value="monthly" {% if range == 'monthly' %}selected{% endif %}>월간</option>
+  </select>
+</form>
+
+<p><a class="menu-link" href="{% url 'dashboard' %}">← 대시보드로 돌아가기</a></p>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<canvas id="mealChart" width="800" height="400"></canvas>
+
+<script>
+  const chartData = {{ events|safe }};
+  const graphColor = "{{ graph_color|default:'#4bc0c0' }}";
+
+  const labels = chartData.map(item => item.date);
+  const counts = chartData.map(item => item.count);
+
+  const ctx = document.getElementById('mealChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: '집밥 횟수 현황',
+        data: counts,
+        fill: false,
+        borderColor: graphColor,
+        backgroundColor: graphColor + '33',
+        pointBackgroundColor: graphColor,
+        tension: 0.3,
+        pointRadius: 5
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          title: { display: true, text: '날짜 또는 주/월' }
+        },
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: '횟수' }
+        }
+      },
+      plugins: {
+        legend: { position: 'top' },
+        title: {
+          display: true,
+          text: '집밥 실천 현황 그래프'
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

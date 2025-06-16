@@ -1,0 +1,25 @@
+{% extends "core_app/base.html" %}
+{% load static %}
+
+{% block content %}
+  <h2>집밥 기록하기</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    <p>
+      {{ form.date.label_tag }}<br>
+      {{ form.date }}
+    </p>
+    <p>
+      {{ form.breakfast.label_tag }} {{ form.breakfast }}
+      {{ form.lunch.label_tag }} {{ form.lunch }}
+      {{ form.dinner.label_tag }} {{ form.dinner }}
+    </p>
+    <button type="submit">저장하기</button>
+  </form>
+
+  <p>
+    <a href="{% url 'dashboard' %}">대시보드로 돌아가기</a> |
+    <a href="{% url 'meal_stats' %}">통계 보기</a>
+  </p>
+{% endblock %}

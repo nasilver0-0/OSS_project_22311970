@@ -1,0 +1,9 @@
+{% extends "core_app/base.html" %}
+{% block content %}
+  <h2>회원가입</h2>
+  <form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">가입하기</button>
+  </form>
+  <a href="{% url 'login' %}">로그인으로</a>
+{% endblock %}

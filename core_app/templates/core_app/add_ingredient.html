@@ -1,0 +1,49 @@
+{% extends "core_app/base.html" %}
+{% load static %}
+
+{% block content %}
+  <h2>식재료 등록</h2>
+  <form method="post">
+    {% csrf_token %}
+    <p>
+      {{ form.name.label_tag }}<br>
+      {{ form.name }}
+    </p>
+    <p>
+      {{ form.expiration_date.label_tag }}<br>
+      {{ form.expiration_date }}
+    </p>
+    <p>
+      {{ form.category.label_tag }}<br>
+      {{ form.category }}
+    </p>
+    <p id="custom-category-row" {% if form.initial.category != 'other' %}style="display:none;"{% endif %}>
+      {{ form.custom_category.label_tag }}<br>
+      {{ form.custom_category }}
+    </p>
+    <button type="submit">등록</button>
+  </form>
+
+  <script>
+    const categorySelect = document.getElementById("id_category");
+    const customRow = document.getElementById("custom-category-row");
+
+    function toggleCustom() {
+      if (categorySelect.value === "other") {
+        customRow.style.display = "block";
+      } else {
+        customRow.style.display = "none";
+        document.getElementById("id_custom_category").value = "";
+      }
+    }
+
+    categorySelect.addEventListener("change", toggleCustom);
+
+    
+    document.addEventListener("DOMContentLoaded", function() {
+      toggleCustom();
+    });
+  </script>
+
+  <p><a href="{% url 'dashboard' %}">대시보드로 돌아가기</a></p>
+{% endblock %}

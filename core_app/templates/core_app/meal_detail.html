@@ -1,0 +1,15 @@
+{% extends "core_app/base.html" %}
+
+{% block content %}
+  <h2>집밥 기록: {{ date|date:"Y-m-d" }}</h2>
+  {% if record %}
+    <ul>
+      <li>아침: {% if record.breakfast %}✅{% else %}❌{% endif %}</li>
+      <li>점심: {% if record.lunch     %}✅{% else %}❌{% endif %}</li>
+      <li>저녁: {% if record.dinner    %}✅{% else %}❌{% endif %}</li>
+    </ul>
+  {% else %}
+    <p>해당 날짜에 기록이 없습니다.</p>
+  {% endif %}
+  <p><a href="{% url 'meal_stats' %}">← 통계로 돌아가기</a></p>
+{% endblock %}

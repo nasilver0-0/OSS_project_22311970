@@ -1,0 +1,124 @@
+{% extends "core_app/base.html" %}
+{% load static %}
+
+{% block content %}
+  <h2>대시보드</h2>
+
+  <nav class="dashboard-nav" style="margin-bottom: 24px;">
+    <a class="menu-link" href="{% url 'add_ingredient' %}">🥕 식재료 추가</a> |
+    <a class="menu-link" href="{% url 'record_meal'      %}">🏠 집밥 기록</a>   |
+    <a class="menu-link" href="{% url 'meal_stats'       %}">📊 통계 보기</a>   |
+    <a class="menu-link" href="{% url 'settings'         %}">⚙️ 알림 설정</a>
+  </nav>
+
+  <style>
+    .alert-section {
+      margin: 24px 0;
+    }
+    .alert-section ul {
+      margin-top: 8px;
+      margin-left: 16px;
+    }
+    .alert-section li {
+      margin: 4px 0;
+    }
+    .alert-section a.delete-link {
+      margin-left: 8px;
+      font-size: 0.9rem;
+      color: #007bff;
+    }
+    .alert-section a.delete-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+
+  <section class="expiry-alerts" style="margin-bottom: 32px;">
+    {% if settings.push_expiry_alert and alert_expired_list %}
+      <div class="alert-expired">
+        <p class="title-expired">
+          📌 <strong>만료된 식재료</strong> (오늘 기준 {{ today|date:"Y-m-d" }} 이전 만료)
+        </p>
+        {% for ingr in alert_expired_list %}
+          <p class="item-expired">
+            • <span class="name-expired">{{ ingr.name }}</span>
+              <em>(만료일: {{ ingr.expiration_date|date:"Y-m-d" }})</em>
+            <a href="{% url 'delete_ingredient' ingr.id %}">삭제</a>
+          </p>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  {% if settings.push_expiry_alert and alert_today_list %}
+    <div class="alert-today">
+      <p class="title-today">
+        📅 <strong>오늘 마감 식재료</strong> (오늘: {{ today|date:"Y-m-d" }})
+      </p>
+      {% for ingr in alert_today_list %}
+        <p class="item-today">
+          • <span class="name-today">{{ ingr.name }}</span>
+          <em>(만료일: {{ ingr.expiration_date|date:"Y-m-d" }})</em>
+          <a href="{% url 'delete_ingredient' ingr.id %}">삭제</a>
+        </p>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+    {% if settings.push_expiry_alert and alert_major_list %}
+      <div class="alert-major">
+        <p class="title-major">
+          🕑 <strong>{{ settings.alert_day_major }}일 전 알림</strong>
+          (만료일: {{ date_major|date:"Y-m-d" }})
+        </p>
+        {% for ingr in alert_major_list %}
+          <p class="item-major">
+            • <span class="name-major">{{ ingr.name }}</span>
+              <em>(만료: {{ ingr.expiration_date|date:"Y-m-d" }})</em>
+            <a href="{% url 'delete_ingredient' ingr.id %}">삭제</a>
+          </p>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if settings.push_expiry_alert and alert_minor_list %}
+      <div class="alert-minor">
+        <p class="title-minor">
+          ⏰ <strong>{{ settings.alert_day_minor }}일 전 긴급 알림</strong>
+          (만료일: {{ date_minor|date:"Y-m-d" }})
+        </p>
+        {% for ingr in alert_minor_list %}
+          <p class="item-minor">
+            • <span class="name-minor">{{ ingr.name }}</span>
+              <em>(만료: {{ ingr.expiration_date|date:"Y-m-d" }})</em>
+            <a href="#"
+  		class="text-danger delete-trigger"
+   		data-bs-toggle="modal"
+   		data-bs-target="#confirmDeleteModal"
+   		data-delete-url="{% url 'delete_ingredient' ingr.id %}">
+  		삭제
+            </a>
+          </p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </section>
+
+<section class="ingredient-list">
+  {% if grouped_ingredients %}
+    {% for category, items in grouped_ingredients.items %}
+      <div style="margin-bottom: 24px;">
+        <h3 style="border-bottom: 1px solid #ccc; padding-bottom: 4px;">{{ category }}</h3>
+        <ul style="list-style: none; padding-left: 0;">
+          {% for ingr in items %}
+            <li style="margin: 4px 0;">
+              🧊 {{ ingr.name }} – {{ ingr.expiration_date|date:"Y-m-d" }}
+              <a href="{% url 'delete_ingredient' ingr.id %}" style="color: red; margin-left: 8px;">삭제</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>등록된 식재료가 없습니다.</p>
+  {% endif %}
+  </section>
+{% endblock %}

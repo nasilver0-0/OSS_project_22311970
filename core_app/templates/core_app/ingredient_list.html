@@ -1,0 +1,49 @@
+{% extends "core_app/base.html" %}
+{% load static %}
+{% block content %}
+  <h2>내 식재료 목록</h2>
+  <p><a href="{% url 'add_ingredient' %}">새 식재료 등록</a></p>
+
+  {% comment %}
+    1) 'ingredients'는 이미 views.py에서 category, expiration_date 순으로 정렬된 QuerySet입니다.
+    2) Django 템플릿의 'regroup' 태그를 써서 'category' 필드별로 그룹화합니다.
+  {% endcomment %}
+  {% regroup ingredients by category as category_list %}
+
+  {% if ingredients %}
+    {% for group in category_list %}
+      <h3>카테고리: {{ group.list.0.get_category_display }}</h3>
+      <table border="1" cellpadding="4" cellspacing="0">
+        <thead>
+          <tr>
+            <th>이름</th>
+            <th>유통기한</th>
+            <th>삭제</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in group.list %}
+            <tr>
+              <td>{{ item.name }}</td>
+              <td>{{ item.expiration_date|date:"Y-m-d" }}</td>
+              <td>
+                <form method="post" action="{% url 'delete_ingredient' item.pk %}" style="display:inline;">
+                  {% csrf_token %}
+                  <button type="submit"
+                          onclick="return confirm('{{ item.name }}을(를) 삭제하시겠습니까?');">
+                    삭제
+                  </button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <br>
+    {% endfor %}
+  {% else %}
+    <p>등록된 식재료가 없습니다.</p>
+  {% endif %}
+
+  <p><a href="{% url 'dashboard' %}">대시보드로 돌아가기</a></p>
+{% endblock %}

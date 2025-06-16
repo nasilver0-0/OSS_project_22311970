@@ -1,0 +1,63 @@
+body {
+  font-family: 'Nanum Gothic', sans-serif;
+}
+.alert-expired {
+  background-color: #e2e3e5;      
+  border: 2px solid #6c757d;      
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  font-family: 'Nanum Gothic', sans-serif;
+}
+.alert-expired .title-expired {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+  color: #343a40;
+}
+.alert-expired .item-expired {
+  margin: 4px 0;
+  font-size: 1rem;
+  color: #495057;
+}
+.alert-expired .name-expired {
+  color: #dc3545;  
+}
+.alert-expired em {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+a.menu-link {
+  text-decoration: none;
+  color: #5a32a3;
+  font-weight: bold;
+}
+a.menu-link:hover {
+  color: #431a8d;
+}
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+}
+.stats-table th,
+.stats-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+.stats-table .no-data {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+.fc-event.count-1 {
+    background-color: #D0F0C0;
+}
+.fc-event.count-2 {
+    background-color: #FDFD96;
+}
+.fc-event.count-3,
+.fc-event.count-4 {
+    background-color: #FFB6C1;
+}
